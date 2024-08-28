@@ -66,9 +66,8 @@ ENV PATH=/AppDir/usr/local/bin:$PATH
 # RUN chmod +x /AppDir/usr/bin/nvim.appimage
 # RUN ln -s /AppDir/usr/bin/nvim.appimage /AppDir/usr/bin/nvim 
 
-RUN git clone https://github.com/neovim/neovim.git \
+RUN git clone --depth 1 --branch stable https://github.com/neovim/neovim.git \
     && cd neovim \
-    && git checkout stable \
     && make CMAKE_BUILD_TYPE=Release \
     && make install DESTDIR=/AppDir
 
@@ -107,5 +106,8 @@ RUN chmod +x /AppDir/AppRun
 RUN cd /tmp && wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 RUN chmod +x /tmp/appimagetool-x86_64.AppImage
 
+COPY ./run_into_bash.sh /
+
+
 # # Build the AppImage
-RUN /tmp/appimagetool-x86_64.AppImage /AppDir /nvim.AppImage
+# RUN /tmp/appimagetool-x86_64.AppImage /AppDir /nvim.AppImage
