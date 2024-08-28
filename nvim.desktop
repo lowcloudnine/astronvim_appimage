@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=nvim
+Exec=AppRun %F
+Icon=nvim
+Type=Application
+Categories=Development;TextEditor;
