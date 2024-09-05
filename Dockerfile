@@ -76,9 +76,10 @@ RUN git clone --depth 1 --branch stable https://github.com/neovim/neovim.git \
 COPY ./config/nvim /AppDir/usr/share/config/nvim
 ENV PATH=/AppDir/usr/bin:$PATH
 
+RUN echo "new apprun script 1"
 ENV XDG_CONFIG_HOME="/AppDir/usr/share/config"
-ENV XDG_DATA_HOME="/AppDir/usr/share/local/state"
-ENV XDG_STATE_HOME="/AppDir/usr/share/local/share"
+ENV XDG_DATA_HOME="/AppDir/usr/share/local/share"
+ENV XDG_STATE_HOME="/AppDir/usr/share/local/state"
 
 RUN nvim --headless "+Lazy! sync" +qa
 RUN nvim --headless -c ":TSUpdateSync" +qa
@@ -95,8 +96,8 @@ RUN cd /tmp && wget https://github.com/BurntSushi/ripgrep/releases/download/13.0
     && cp ripgrep-13.0.0-x86_64-unknown-linux-musl/rg /AppDir/usr/local/bin/
 
 
-
 # # Copy AppRun script (used by AppImage)
+RUN echo "new apprun script 1"
 COPY ./AppRun /AppDir/AppRun
 COPY ./nvim.desktop /AppDir/nvim.desktop
 COPY ./nvim.png /AppDir/nvim.png
@@ -105,8 +106,6 @@ RUN chmod +x /AppDir/AppRun
 # # Copy the AppImageTool to create the AppImage
 RUN cd /tmp && wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 RUN chmod +x /tmp/appimagetool-x86_64.AppImage
-
-COPY ./run_into_bash.sh /
 
 
 # # Build the AppImage

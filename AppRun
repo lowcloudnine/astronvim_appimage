@@ -1,6 +1,37 @@
 #!/bin/bash
 HERE="$(dirname "$(readlink -f "${0}")")"
-export PATH="$HERE/usr/bin:$PATH"
 export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
-exec "$HERE/usr/bin/nvim" "$@"
+
+export PATH="$HERE/usr/bin:$HERE/usr/local/bin:$HERE/usr/local/nodejs/node-v18.17.1-linux-x64/bin/:$PATH"
+export LD_LIBRARY_PATH="$HERE/usr/lib:$HERE/usr/local/lib:$LD_LIBRARY_PATH"
+
+
+# Define writable directories for config and data
+# These are the default path for nvim to load 
+WRITABLE_CONFIG_DIR="$HOME/.config/"
+WRITABLE_DATA_DIR="$HOME/.local/share/"
+WRITABLE_STATE_DIR="$HOME/.local/state/"
+
+
+# Check if the writable directories exist; if not, copy the config and data from AppImage
+if [ ! -d "$WRITABLE_CONFIG_DIR" ]; then
+    mkdir -p "$WRITABLE_CONFIG_DIR"
+    cp -r "$HERE/usr/share/config/nvim" "$WRITABLE_CONFIG_DIR"
+fi
+
+if [ ! -d "$WRITABLE_DATA_DIR" ]; then
+    mkdir -p "$WRITABLE_DATA_DIR"
+    cp -r "$HERE/usr/share/local/share/nvim" "$WRITABLE_DATA_DIR"
+fi
+
+if [ ! -d "$WRITABLE_STATE_DIR" ]; then
+    mkdir -p "$WRITABLE_STATE_DIR"
+    cp -r "$HERE/usr/share/local/state/nvim" "$WRITABLE_STATE_DIR"
+fi
+
+# Set Python environment
+export PYTHONHOME="$HERE/usr/local"
+export PYTHONPATH="$HERE/usr/local/lib/python3.12/site-packages:$PYTHONPATH"
+
+exec "$HERE/usr/local/bin/nvim" "$@"
 
