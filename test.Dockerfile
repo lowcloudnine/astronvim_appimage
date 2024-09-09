@@ -5,6 +5,6 @@ RUN mkdir -p /tmp
 
 RUN echo "ready to copy!"
 
-RUN apt-get update && apt-get install -y git fuse
+RUN apt-get update && apt-get install -y git fuse cmake
 
 COPY output /tmp/

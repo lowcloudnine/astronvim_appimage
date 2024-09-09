@@ -73,10 +73,10 @@ RUN git clone --depth 1 --branch stable https://github.com/neovim/neovim.git \
 
 
 # # Set up Neovim configuration
+RUN echo "build configuration"
 COPY ./config/nvim /AppDir/usr/share/config/nvim
 ENV PATH=/AppDir/usr/bin:$PATH
 
-RUN echo "new apprun script 1"
 ENV XDG_CONFIG_HOME="/AppDir/usr/share/config"
 ENV XDG_DATA_HOME="/AppDir/usr/share/local/share"
 ENV XDG_STATE_HOME="/AppDir/usr/share/local/state"
@@ -97,7 +97,6 @@ RUN cd /tmp && wget https://github.com/BurntSushi/ripgrep/releases/download/13.0
 
 
 # # Copy AppRun script (used by AppImage)
-RUN echo "new apprun script 1"
 COPY ./AppRun /AppDir/AppRun
 COPY ./nvim.desktop /AppDir/nvim.desktop
 COPY ./nvim.png /AppDir/nvim.png
