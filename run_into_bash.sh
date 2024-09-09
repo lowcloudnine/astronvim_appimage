@@ -6,6 +6,7 @@ docker build --target build_neovim -t my-neovim-build-deps .
 
 # cp your config folder in the current wokring dir
 mkdir -p ./config
+mkdir -p ./output
 cp -r ~/.config/nvim ./config
 
 # Run the Docker container but not build the AppImage
