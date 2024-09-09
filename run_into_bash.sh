@@ -1,6 +1,6 @@
 # stage 1
-# docker build --target build-deps -t my-neovim-build-deps .
-#
+docker build --target build-deps -t my-neovim-build-deps .
+
 # stage 2
 docker build --target build_neovim -t my-neovim-build-deps .
 
@@ -18,7 +18,7 @@ docker run -it --privileged -v /dev/fuse:/dev/fuse --name neovim-appimage-build 
 docker cp neovim-appimage-build:/nvim.AppImage ./output/nvim.AppImage
 
 # Test the image 
-# sh ./test_neovim_image.sh
-#
-# # Clean up: remove the container after copying the AppImage
-# # docker rm neovim-appimage-build
+sh ./test_neovim_image.sh
+
+# Clean up: remove the container after copying the AppImage
+# docker rm neovim-appimage-build
