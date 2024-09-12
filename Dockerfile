@@ -73,7 +73,7 @@ RUN git clone --depth 1 --branch stable https://github.com/neovim/neovim.git \
 
 
 # # Set up Neovim configuration
-RUN echo "build configuration"
+RUN echo "build configuration updated 2"
 COPY ./config/nvim /AppDir/usr/share/config/nvim
 ENV PATH=/AppDir/usr/bin:$PATH
 
@@ -85,8 +85,11 @@ RUN nvim --headless "+Lazy! sync" +qa
 RUN nvim --headless -c ":TSUpdateSync" +qa
 RUN nvim --headless "+Lazy! sync" +qa
 RUN nvim --headless -c ":TSUpdateSync" +qa
-RUN ln -s /AppDir/usr/local/bin/nvim /AppDir/usr/bin/nvim
+RUN nvim --headless "+Lazy! sync" +qa
+RUN nvim --headless -c ":TSUpdateSync" +qa
+RUN nvim --headless -c 'MasonInstall jq pyright black isort yapf sql-formatter lua-language-server' +qa
 
+RUN ln -s /AppDir/usr/local/bin/nvim /AppDir/usr/bin/nvim
 # Install Pyright via npm into /AppDir/usr/local
 RUN npm install -g --prefix /AppDir/usr/local pyright
 
@@ -106,6 +109,3 @@ RUN chmod +x /AppDir/AppRun
 RUN cd /tmp && wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 RUN chmod +x /tmp/appimagetool-x86_64.AppImage
 
-
-# # Build the AppImage
-# RUN /tmp/appimagetool-x86_64.AppImage /AppDir /nvim.AppImage
