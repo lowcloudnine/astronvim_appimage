@@ -1,6 +1,4 @@
-# Stage 1: build devs && Python3.12
-# Use an debian base image
-FROM debian:bullseye AS build-deps
+FROM ubuntu:noble AS build-deps
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -30,7 +28,8 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     && apt-get clean
 
-RUN apt install --reinstall coreutils
+RUN apt-get install --reinstall coreutils
+RUN apt-get update && apt-get upgrade -y
 
 RUN mkdir -p /AppDir/usr/bin /AppDir/usr/share /AppDir/usr/lib /AppDir/usr/share/nvim/runtime /AppDir/usr/local/nodejs /tmp
 
@@ -39,17 +38,18 @@ RUN cd /tmp && wget https://nodejs.org/dist/v18.17.1/node-v18.17.1-linux-x64.tar
     && tar -xJf node-v18.17.1-linux-x64.tar.xz \
     && mv node-v18.17.1-linux-x64 /AppDir/usr/local/nodejs
 
-
 # Add Node.js to PATH
 ENV PATH="/AppDir/usr/local/nodejs/node-v18.17.1-linux-x64/bin:$PATH"
 
 # Verify Node.js and npm versions
 RUN node -v && npm -v
 
+ARG PY_VER="3.13.1"
+ARG PY_SHT="3.13"
 RUN cd /tmp \
-	&& wget https://www.python.org/ftp/python/3.12.4/Python-3.12.4.tgz \
-    && tar -xf Python-3.12.4.tgz \
-    && cd Python-3.12.4 \
+    && wget https://www.python.org/ftp/python/$PY_VER/Python-$PY_VER.tgz \
+    && tar -xf Python-$PY_VER.tgz \
+    && cd Python-$PY_VER \
     && ./configure --prefix=/AppDir/usr/local \
     && make -j$(nproc) \
     && make install
@@ -58,7 +58,7 @@ RUN apt-get install -y ninja-build gettext
 
 FROM build-deps AS build_neovim
 
-RUN /AppDir/usr/local/bin/python3.12 -m pip install --no-cache-dir --prefix=/AppDir/usr/local pynvim
+RUN /AppDir/usr/local/bin/python$PY_SHT -m pip install --no-cache-dir --prefix=/AppDir/usr/local pynvim
 
 ENV PATH=/AppDir/usr/local/bin:$PATH
 
@@ -70,7 +70,6 @@ RUN git clone --depth 1 --branch stable https://github.com/neovim/neovim.git \
     && cd neovim \
     && make CMAKE_BUILD_TYPE=Release \
     && make install DESTDIR=/AppDir
-
 
 # # Set up Neovim configuration
 RUN echo "build configuration updated 2"
